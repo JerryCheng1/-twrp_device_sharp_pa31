@@ -14,24 +14,29 @@
 # limitations under the License.
 #
 
+DEVICE_PATH := device/sharp/pa31
+
 # Release name
 PRODUCT_RELEASE_NAME := pa31
 
-$(call inherit-product, build/target/product/embedded.mk)
+# Inherit from common AOSP config
+$(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/base.mk)
 
-# Inherit from our custom product configuration
-$(call inherit-product, vendor/omni/config/common.mk)
+# Inherit some common TWRP stuff.
+$(call inherit-product, vendor/twrp/config/common.mk)
+
+# Inherit device configuration
+$(call inherit-product, $(DEVICE_PATH)/device.mk)
+
+PRODUCT_COPY_FILES += $(call find-copy-subdir-files,*,$(DEVICE_PATH)/recovery/root,recovery/root)
 
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.hardware.keystore=msm8992
 
 ## Device identifier. This must come after all inclusions
 PRODUCT_DEVICE := pa31
-PRODUCT_NAME := omni_pa31
+PRODUCT_NAME := twrp_pa31
 PRODUCT_BRAND := SHARP
 PRODUCT_MODEL := SG503SH
 PRODUCT_MANUFACTURER := SHARP
-
-# AVB
-PRODUCT_SUPPORTS_BOOT_SIGNER := true
-PRODUCT_VERITY_SIGNING_KEY := build/target/product/security/verity
